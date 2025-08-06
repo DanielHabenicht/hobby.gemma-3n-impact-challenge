@@ -34,22 +34,23 @@ export class Main {
     this.form = this.fb.group({
       items: this.fb.array([
         this.fb.group({
-          title: [''],
+          title: ['Clean the house'],
         }),
       ]),
     });
   }
 
-  // public ngOnInit() {
-  //   this.llm.getCompletion('Who are you?').subscribe({
-  //     next: (response) => {
-  //       console.log(response);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error generating response:', error);
-  //     },
-  //   });
-  // }
+  public ngOnInit() {
+    // this.preview = '';
+    // this.llm.getCompletion('Who are you?').subscribe({
+    //   next: (response) => {
+    //     this.preview += response;
+    //   },
+    //   error: (error) => {
+    //     console.error('Error generating response:', error);
+    //   },
+    // });
+  }
 
   get items() {
     return this.form.controls['items'] as FormArray;
@@ -65,15 +66,17 @@ export class Main {
 
   runPreview() {
     this.preview = '';
-    let prompt = `Given the following list try to predict the next 3 items that will be added to the list.
-Return them in the special format ["<Item>", “<Item>”] without any extra text.
+    let list = this.items.value
+      .filter((item: any) => item.title && item.title.trim() !== '')
+      .map((item: any) => ' - ' + item.title)
+      .join('\n');
+    let prompt =
+      `You were given the following list: \n` +
+      list +
+      `\n\n Think of 3 items that should also be put onto the list.
 
-`;
+Only return the items as a JSON array without any extra markup.`;
 
-    this.items.value.forEach((item: any) => {
-      prompt += `\n- ${item.title}`;
-    });
-    console.log('Prompt:', prompt);
     this.llm.getCompletion(prompt).subscribe({
       next: (response) => {
         this.preview += response;

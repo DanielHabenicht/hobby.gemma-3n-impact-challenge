@@ -23,13 +23,14 @@ export class Llm {
         console.log('loaded');
         LlmInference.createFromOptions(genai, {
           baseOptions: {
-            modelAssetPath: '/assets/gemma3-4b-it-int4.task',
-            // modelAssetPath: '/assets/gemma3-1b-it-int4.task',
+            // modelAssetPath: '/assets/gemma3-4b-it-int4.task',
+            modelAssetPath: '/assets/gemma3-1b-it-int4.task',
             // modelAssetPath: '/assets/gemma-3n-E2B-it-int4.task',
           },
           maxTokens: 1000,
           topK: 40,
-          temperature: 1,
+          temperature: 0.8,
+          randomSeed: 101,
         })
           .then((llmInference) => {
             console.log('init');
@@ -61,6 +62,9 @@ export class Llm {
     prompt: string,
     llmInference: LlmInference
   ): Observable<string> {
+    // https://ai.google.dev/gemma/docs/core/prompt-structure
+    prompt = `<start_of_turn>user\n${prompt}<end_of_turn>\n<start_of_turn>model`;
+    console.log('Generating response for prompt:', prompt);
     return new Observable((observer) => {
       llmInference
         .generateResponse(prompt, (partialResult, done) => {
@@ -77,31 +81,4 @@ export class Llm {
         });
     });
   }
-
-  // async init() {
-  //   FilesetResolver.forGenAiTasks('/wasm').then((genai) => {
-  //     console.log('loaded');
-  //     LlmInference.createFromOptions(genai, {
-  //       baseOptions: {
-  //         modelAssetPath: '/assets/gemma3-1b-it-int4.task',
-  //       },
-  //       maxTokens: 1000,
-  //       topK: 40,
-  //       temperature: 0.8,
-  //       randomSeed: 101,
-  //     }).then((llmInference) => {
-  //       console.log('init');
-  //       llmInference
-  //         .generateResponse(
-  //           `
-  //               <start_of_turn>user
-  //   What is Cramer's Rule?<end_of_turn>
-  //   <start_of_turn>model`
-  //         )
-  //         .then((response) => {
-  //           console.log(response);
-  //         });
-  //     });
-  //   });
-  // }
 }
