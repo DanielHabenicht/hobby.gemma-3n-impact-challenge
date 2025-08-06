@@ -1,4 +1,18 @@
 <div [formGroup]="form">
+  <mat-form-field class="title">
+    <input
+      matInput
+      formControlName="title"
+      type="text"
+      placeholder="Simple placeholder"
+      (keyup.enter)="addItem()"
+    />
+    <!-- @if (value) {
+                        <button matSuffix matIconButton aria-label="Clear" (click)="value=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        } -->
+  </mat-form-field>
   <mat-list role="list" formArrayName="items">
     @for (itemsForm of items.controls; track idx; let idx = $index) {
     <mat-list-item role="listitem" [formGroup]="$any(itemsForm)">
@@ -25,6 +39,14 @@
       </button>
       <span> Add Item </span>
     </mat-list-item>
+    @for (item of previewItems; track idx; let idx = $index) {
+    <mat-list-item (click)="addItem(item)" class="preview">
+      <button matIconButton>
+        <mat-icon class="add-course-btn">add</mat-icon>
+      </button>
+      <span> {{ item }} </span>
+    </mat-list-item>
+    }
   </mat-list>
 
   <!-- <ng-container >

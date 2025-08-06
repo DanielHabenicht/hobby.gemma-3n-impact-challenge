@@ -23,8 +23,8 @@ export class Llm {
         console.log('loaded');
         LlmInference.createFromOptions(genai, {
           baseOptions: {
-            // modelAssetPath: '/assets/gemma3-4b-it-int4.task',
-            modelAssetPath: '/assets/gemma3-1b-it-int4.task',
+            modelAssetPath: '/assets/gemma3-4b-it-int4.task',
+            // modelAssetPath: '/assets/gemma3-1b-it-int4.task',
             // modelAssetPath: '/assets/gemma-3n-E2B-it-int4.task',
           },
           maxTokens: 1000,

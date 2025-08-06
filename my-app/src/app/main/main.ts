@@ -29,12 +29,14 @@ import { Llm } from '../llm';
 export class Main {
   public form;
   public preview = '';
+  public previewItems: string[] = [];
 
   constructor(private fb: FormBuilder, public llm: Llm) {
     this.form = this.fb.group({
+      title: ['Clean the house'],
       items: this.fb.array([
         this.fb.group({
-          title: ['Clean the house'],
+          title: ['Garbage'],
         }),
       ]),
     });
@@ -56,9 +58,9 @@ export class Main {
     return this.form.controls['items'] as FormArray;
   }
 
-  addItem() {
+  addItem(item: string | undefined = undefined) {
     const lessonForm = this.fb.group({
-      title: [''],
+      title: [item || ''],
     });
 
     this.items.push(lessonForm);
@@ -71,7 +73,7 @@ export class Main {
       .map((item: any) => ' - ' + item.title)
       .join('\n');
     let prompt =
-      `You were given the following list: \n` +
+      `You were given a list with the title ${this.form.controls['title'].value}: \n` +
       list +
       `\n\n Think of 3 items that should also be put onto the list.
 
@@ -83,6 +85,22 @@ Only return the items as a JSON array without any extra markup.`;
       },
       error: (error) => {
         console.error('Error generating response:', error);
+      },
+      complete: () => {
+        // Extract the items from the response
+        try {
+          let regex = /\[(.*?)\]/;
+          let match = this.preview.match(regex);
+          if (match && match[1]) {
+            let previewItems = match[1]
+              .split(',')
+              .map((item: string) => item.trim().replace(/['"]+/g, ''));
+
+            this.previewItems = previewItems;
+          }
+        } catch (e) {
+          console.error('Error parsing response:', e);
+        }
       },
     });
   }
