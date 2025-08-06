@@ -1,34 +1,33 @@
-
-
 <div [formGroup]="form">
-    <mat-list role="list" formArrayName="items">
-        @for (itemsForm of items.controls; track idx; let idx = $index) {
-        <mat-list-item role="listitem" [formGroup]="$any(itemsForm)">
-            <mat-checkbox class="example-margin"></mat-checkbox>
-                <mat-form-field class="example-form-field">
-                    <input matInput formControlName="title" type="text" placeholder="Simple placeholder" (keyup.enter)="addItem()">
-                    <!-- @if (value) {
+  <mat-list role="list" formArrayName="items">
+    @for (itemsForm of items.controls; track idx; let idx = $index) {
+    <mat-list-item role="listitem" [formGroup]="$any(itemsForm)">
+      <mat-checkbox class="example-margin"></mat-checkbox>
+      <mat-form-field class="example-form-field">
+        <input
+          matInput
+          formControlName="title"
+          type="text"
+          placeholder="Simple placeholder"
+          (keyup.enter)="addItem()"
+        />
+        <!-- @if (value) {
                         <button matSuffix matIconButton aria-label="Clear" (click)="value=''">
                             <mat-icon>close</mat-icon>
                         </button>
                         } -->
-                    </mat-form-field>
-        </mat-list-item>
-        }
-        <mat-list-item (click)="addItem()">
-            <button matIconButton>
-            <mat-icon class="add-course-btn">add</mat-icon>
-            </button>
-            <span>
+      </mat-form-field>
+    </mat-list-item>
+    }
+    <mat-list-item (click)="addItem()">
+      <button matIconButton>
+        <mat-icon class="add-course-btn">add</mat-icon>
+      </button>
+      <span> Add Item </span>
+    </mat-list-item>
+  </mat-list>
 
-                Add Item
-            </span>
-
-        </mat-list-item>
-    </mat-list>
-
-
-    <!-- <ng-container >
+  <!-- <ng-container >
         <ng-container *ngFor="let lessonForm of lessons.controls; let i = index">
             <div class="lesson-form-row" [formGroup]="lessonForm">
                 <mat-form-field appearance="fill">
@@ -49,5 +48,8 @@
             </div>
         </ng-container>
     </ng-container> -->
-  
 </div>
+
+<button matButton (click)="runPreview()">Preview</button>
+
+{{ preview }}
