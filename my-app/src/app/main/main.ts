@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgForOf } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Llm } from '../llm';
+import { debounce, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -52,6 +53,13 @@ export class Main {
     //     console.error('Error generating response:', error);
     //   },
     // });
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500) // Adjust the debounce time as needed
+      )
+      .subscribe((value) => {
+        this.runPreview();
+      });
   }
 
   get items() {
@@ -64,6 +72,10 @@ export class Main {
     });
 
     this.items.push(lessonForm);
+  }
+
+  removeFromPreview(index: number) {
+    this.previewItems.splice(index, 1);
   }
 
   runPreview() {

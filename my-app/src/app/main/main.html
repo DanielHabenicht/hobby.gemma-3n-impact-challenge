@@ -40,7 +40,10 @@
       <span> Add Item </span>
     </mat-list-item>
     @for (item of previewItems; track idx; let idx = $index) {
-    <mat-list-item (click)="addItem(item)" class="preview">
+    <mat-list-item
+      (click)="addItem(item); removeFromPreview(idx)"
+      class="preview"
+    >
       <button matIconButton>
         <mat-icon class="add-course-btn">add</mat-icon>
       </button>
